@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Code">
+      <UniqueIdentifier>{9062abdf-f2be-4538-8ab5-3b4957160a74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Program">
+      <UniqueIdentifier>{d156b54a-3c60-4486-a80e-37a510435421}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shaders">
+      <UniqueIdentifier>{b47f8194-47f9-41cf-8cfe-60b57ca95b15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Tools">
+      <UniqueIdentifier>{e2c25799-67b4-4f43-8d40-dfe6cc0ae7c2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Tools\Loader">
+      <UniqueIdentifier>{53c6e154-b82f-4e76-9476-200f0c46afdb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Code\Tools\Animation">
+      <UniqueIdentifier>{cf19ac05-f322-42e8-adab-26db1514fcd7}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="framework.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Code</Filter>
+    </ClCompile>
+    <ClCompile Include="program.cpp">
+      <Filter>Code\Program</Filter>
+    </ClCompile>
+    <ClCompile Include="mesh.cpp">
+      <Filter>Code\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="meshtree.cpp">
+      <Filter>Code\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="FBXLoader.cpp">
+      <Filter>Code\Tools\Loader</Filter>
+    </ClCompile>
+    <ClCompile Include="treerenderer.cpp">
+      <Filter>Code\Tools</Filter>
+    </ClCompile>
+    <ClCompile Include="animation.cpp">
+      <Filter>Code\Tools\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="animchannel.cpp">
+      <Filter>Code\Tools\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="meshanimator.cpp">
+      <Filter>Code\Tools\Animation</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="framework.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Code</Filter>
+    </ClInclude>
+    <ClInclude Include="program.h">
+      <Filter>Code\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="meshnode.h">
+      <Filter>Code\Program</Filter>
+    </ClInclude>
+    <ClInclude Include="mesh.h">
+      <Filter>Code\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="meshtree.h">
+      <Filter>Code\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="FBXLoader.h">
+      <Filter>Code\Tools\Loader</Filter>
+    </ClInclude>
+    <ClInclude Include="treerenderer.h">
+      <Filter>Code\Tools</Filter>
+    </ClInclude>
+    <ClInclude Include="animation.h">
+      <Filter>Code\Tools\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="animchannel.h">
+      <Filter>Code\Tools\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="meshanimator.h">
+      <Filter>Code\Tools\Animation</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="shdr_default.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shdr_default.frag">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shdr_line.vert">
+      <Filter>Shaders</Filter>
+    </None>
+    <None Include="shdr_line.frag">
+      <Filter>Shaders</Filter>
+    </None>
+  </ItemGroup>
+</Project>
