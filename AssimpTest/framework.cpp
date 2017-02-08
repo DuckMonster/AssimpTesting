@@ -43,7 +43,7 @@ void CFramework::Run( IProgram & program ) {
 			fpsMin = delta;
 
 		if (fpsTotal > 1.f) {
-			std::cout << (fpsTotal / frameCount) * 1000.f << " ms ( MAX " << fpsMax * 1000.f << " ms, MIN " << fpsMin * 1000.f << " ms)\n";
+			//std::cout << (fpsTotal / frameCount) * 1000.f << " ms ( MAX " << fpsMax * 1000.f << " ms, MIN " << fpsMin * 1000.f << " ms)\n";
 
 			fpsTotal = 0.f;
 			fpsMax = 0.f;

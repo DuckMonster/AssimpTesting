@@ -11,7 +11,7 @@ public:
 	CAnimation( float length, float framerate );
 	~CAnimation( );
 
-	void AddChannel( const CAnimationChannel& channel );
+	CAnimationChannel& GetChannel( const std::string nodeName );
 	void Update( float delta );
 
 	float GetTime( ) { return glm::mod( m_Time, m_Length ); }

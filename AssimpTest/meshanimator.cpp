@@ -23,6 +23,7 @@ void CMeshAnimator::ApplyAnimation( ) {
 
 		if (node) {
 			node->SetBaseTransform( transform.getMatrix( ) );
+			//node->m_Transform = transform;
 		}
 	}
 }

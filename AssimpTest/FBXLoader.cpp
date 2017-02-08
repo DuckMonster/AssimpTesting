@@ -46,6 +46,18 @@ namespace {
 		}
 	}
 
+	void ProcessAnimation( aiAnimation* anim ) {
+		cout << anim->mName.C_Str( ) << "\n";
+		for (size_t i = 0; i < anim->mNumChannels; i++) {
+			aiNodeAnim* chnl = anim->mChannels[i];
+
+			cout << "  " << chnl->mNodeName.C_Str( ) << "\n";
+			cout << "    " << chnl->mNumPositionKeys << "\n"
+				<< "    " << chnl->mNumRotationKeys << "\n"
+				<< "    " << chnl->mNumScalingKeys << "\n";
+		}
+	}
+
 	template<typename OutT, typename InT>
 	OutT convert( const InT& value ) {
 		OutT result;
@@ -120,21 +132,27 @@ void FBXLoader::Load( const std::string file, CAnimation& animation ) {
 		aiAnimation* fbxAnimation = scene->mAnimations[a];
 		animation = CAnimation( fbxAnimation->mDuration, fbxAnimation->mTicksPerSecond );
 
+		ProcessAnimation( fbxAnimation );
+
 		for (size_t c = 0; c < fbxAnimation->mNumChannels; c++) {
 			aiNodeAnim* fbxChannel = fbxAnimation->mChannels[c];
 
 			std::string nodeName = GetNodeName( fbxChannel );
 			std::string dataName = GetNodeData( fbxChannel );
 
-			if (dataName == "" || dataName == "Translation") {
-				CAnimationChannel chnl( nodeName );
+			CAnimationChannel& chnl = animation.GetChannel( nodeName );
 
+			if (dataName == "Translation") {
 				for (size_t p = 0; p < fbxChannel->mNumPositionKeys; p++) {
 					aiVector3D value = fbxChannel->mPositionKeys[p].mValue;
 					chnl.AddKey( { convert<vec3>( value ) } );
 				}
-
-				animation.AddChannel( chnl );
+			}
+			else if (dataName == "Rotation") {
+				for (size_t p = 0; p < fbxChannel->mNumPositionKeys; p++) {
+					aiVector3D value = fbxChannel->mPositionKeys[p].mValue;
+					chnl.AddKey( { convert<vec3>( value ) } );
+				}
 			}
 		}
 	}
@@ -184,12 +202,18 @@ void FBXLoader::ParseMesh( const aiScene* scene, const size_t index, const size_
 void FBXLoader::ParseNode( const aiNode* node, CMeshTree::Node* targetNode ) {
 	std::string data( GetNodeData( node ) );
 
+	mat4 baseTransform( 1.f );
+
 	// Loop through nodes to fetch all data in FBX parser
 	while (data != "") {
 		if (data == "RotationPivot")
 			targetNode->SetPivot( transpose( convert( node->mTransformation ) ) );
-		if (data == "PreRotation")
-			targetNode->SetBaseTransform( transpose( convert( node->mTransformation ) ) );
+
+		else if (data == "Translation")
+			baseTransform = baseTransform * transpose( convert( node->mTransformation ) );
+
+		else if (data == "PreRotation")
+			targetNode->SetLocalAxes( transpose( convert( node->mTransformation ) ) );
 
 		node = node->mChildren[0];
 		data = GetNodeData( node );
@@ -202,6 +226,8 @@ void FBXLoader::ParseNode( const aiNode* node, CMeshTree::Node* targetNode ) {
 	// Base transform
 	if (!node->mTransformation.IsIdentity( ))
 		targetNode->SetBaseTransform( transpose( convert( node->mTransformation ) ) );
+	else
+		targetNode->SetBaseTransform( baseTransform );
 
 	// We made it! To the actual node
 	for (size_t i = 0; i < node->mNumChildren; i++) {

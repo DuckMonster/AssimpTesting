@@ -12,8 +12,16 @@ CAnimation::CAnimation( float length, float framerate ) :
 CAnimation::~CAnimation( ) {
 }
 
-void CAnimation::AddChannel( const CAnimationChannel& channel ) {
-	m_Channels.push_back( channel );
+CAnimationChannel& CAnimation::GetChannel( const std::string nodeName ) {
+	// Search for nodename
+	for (CAnimationChannel& chnl : m_Channels) {
+		if (chnl.GetNodeName( ) == nodeName)
+			return chnl;
+	}
+
+	// Add new channel if there is none existing
+	m_Channels.push_back( CAnimationChannel( nodeName ) );
+	return m_Channels.back( );
 }
 
 void CAnimation::Update( float delta ) {

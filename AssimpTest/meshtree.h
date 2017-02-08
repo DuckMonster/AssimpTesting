@@ -26,11 +26,13 @@ public:
 		void SetPivot( const glm::vec3& world );
 		void SetPivot( const glm::mat4& mat );
 		void SetBaseTransform( const glm::mat4& mat ) { m_BaseTransform = mat; }
+		void SetLocalAxes( const glm::mat4& mat ) { m_LocalAxes = mat; }
 
 		const glm::vec3 GetPivotPoint( );
 		const glm::mat4 GetPivotMatrix( );
 		const glm::vec3 GetTransformedPivot( );
 		const glm::mat4 GetTransform( );
+		const glm::mat4 GetLocalAxes( ) { return m_LocalAxes; }
 
 		void SetMesh( size_t mesh ) { m_MeshIndex = mesh; }
 
@@ -38,9 +40,12 @@ public:
 
 	private:
 		const std::string	m_Name;
+
 		glm::mat4			m_BaseTransform;
+		glm::mat4			m_LocalAxes;
 		glm::mat4			m_Pivot;
 		glm::mat4			m_PivotInverse;
+
 		int					m_MeshIndex;
 		Node*				m_Parent;
 		std::vector<Node*>	m_Children;

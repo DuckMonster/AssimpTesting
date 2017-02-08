@@ -47,7 +47,7 @@ void CProgram::Update( float delta ) {
 	static float rSpeed = 0.1f;
 	t += delta;
 
-	m_Camera.position = glm::vec3( sin( t * rSpeed ), 0.4f, cos( t * rSpeed ) ) * 4.f;
+	m_Camera.position = glm::vec3( sin( t * rSpeed ), 0.4f, cos( t * rSpeed ) ) * 6.f;
 	m_Camera.direction = -m_Camera.position;
 
 	m_Animator.Update( delta );

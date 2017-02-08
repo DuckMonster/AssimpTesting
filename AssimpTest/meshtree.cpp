@@ -33,6 +33,7 @@ CMeshTree::Node::Node( std::string name ) :
 	m_Name( name ),
 
 	m_BaseTransform( 1.f ),
+	m_LocalAxes( 1.f ),
 	m_Pivot( 1.f ), m_PivotInverse( 1.f ),
 
 	m_MeshIndex( -1 ),
@@ -48,7 +49,7 @@ CMeshTree::Node::~Node( ) {
 
 void CMeshTree::Node::Draw( glt::Shader& shader, CMeshTree* tree ) { Draw( shader, mat4( 1.f ), tree ); }
 void CMeshTree::Node::Draw( glt::Shader& shader, glm::mat4 matrix, CMeshTree* tree ) {
-	matrix = matrix * (m_BaseTransform * m_Pivot * m_Transform.getMatrix( ) * m_PivotInverse);
+	matrix = matrix * (m_BaseTransform * m_LocalAxes * m_Pivot * m_Transform.getMatrix( ) * m_PivotInverse);
 
 	if (tree && m_MeshIndex != -1) {
 		shader.set( "u_model", matrix );
