@@ -89,6 +89,9 @@
     <ClInclude Include="meshanimator.h">
       <Filter>Code\Tools\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="nodetransform.h">
+      <Filter>Code\Tools</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="shdr_default.vert">

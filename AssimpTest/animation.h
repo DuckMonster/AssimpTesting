@@ -3,15 +3,15 @@
 
 class CAnimation {
 public:
-	typedef std::vector<CAnimationChannel>::iterator iterator;
-	typedef std::vector<CAnimationChannel>::const_iterator const_iterator;
+	typedef std::vector<CAnimationChannel*>::iterator iterator;
+	typedef std::vector<CAnimationChannel*>::const_iterator const_iterator;
 
 public:
 	CAnimation( );
 	CAnimation( float length, float framerate );
 	~CAnimation( );
 
-	CAnimationChannel& GetChannel( const std::string nodeName );
+	CAnimationChannel* GetChannel( const std::string nodeName );
 	void Update( float delta );
 
 	float GetTime( ) { return glm::mod( m_Time, m_Length ); }
@@ -27,5 +27,5 @@ private:
 	float m_Length;
 	float m_Framerate;
 
-	std::vector<CAnimationChannel> m_Channels;
+	std::vector<CAnimationChannel*> m_Channels;
 };

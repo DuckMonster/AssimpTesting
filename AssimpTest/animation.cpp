@@ -12,15 +12,15 @@ CAnimation::CAnimation( float length, float framerate ) :
 CAnimation::~CAnimation( ) {
 }
 
-CAnimationChannel& CAnimation::GetChannel( const std::string nodeName ) {
+CAnimationChannel* CAnimation::GetChannel( const std::string nodeName ) {
 	// Search for nodename
-	for (CAnimationChannel& chnl : m_Channels) {
-		if (chnl.GetNodeName( ) == nodeName)
+	for (CAnimationChannel* chnl : m_Channels) {
+		if (chnl->GetNodeName( ) == nodeName)
 			return chnl;
 	}
 
 	// Add new channel if there is none existing
-	m_Channels.push_back( CAnimationChannel( nodeName ) );
+	m_Channels.push_back( new CAnimationChannel( nodeName, m_Length + 1 ) );
 	return m_Channels.back( );
 }
 

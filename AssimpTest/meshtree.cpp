@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "meshtree.h"
 
+#include <glm/gtx/matrix_decompose.hpp>
+
 CMeshTree::CMeshTree( ) :
 	m_Root( NULL ) {
 }
@@ -32,9 +34,8 @@ void CMeshTree::Draw( glt::Shader& shader ) {
 CMeshTree::Node::Node( std::string name ) :
 	m_Name( name ),
 
-	m_BaseTransform( 1.f ),
-	m_LocalAxes( 1.f ),
-	m_Pivot( 1.f ), m_PivotInverse( 1.f ),
+	m_Transform( ),
+	m_RotationAxes( 1.f ),
 
 	m_MeshIndex( -1 ),
 	m_Parent( NULL ), m_Children( ) {
@@ -49,7 +50,7 @@ CMeshTree::Node::~Node( ) {
 
 void CMeshTree::Node::Draw( glt::Shader& shader, CMeshTree* tree ) { Draw( shader, mat4( 1.f ), tree ); }
 void CMeshTree::Node::Draw( glt::Shader& shader, glm::mat4 matrix, CMeshTree* tree ) {
-	matrix = matrix * (m_BaseTransform * m_LocalAxes * m_Pivot * m_Transform.getMatrix( ) * m_PivotInverse);
+	matrix = matrix * GetLocalSpace( );
 
 	if (tree && m_MeshIndex != -1) {
 		shader.set( "u_model", matrix );
@@ -91,33 +92,12 @@ CMeshTree::Node * CMeshTree::Node::FindNode( const std::string & name ) {
 	}
 }
 
-void CMeshTree::Node::SetPivot( const glm::vec3& world ) {
-	m_Pivot = translate( glm::mat4( 1.f ), -world );
-	m_PivotInverse = inverse( m_Pivot );
-}
+void CMeshTree::Node::SetTransform( const glm::mat4& mat ) {
+	CNodeTransform transform;
+	glm::vec3 ununsed3;
+	glm::vec4 ununsed4;
 
-void CMeshTree::Node::SetPivot( const glm::mat4& mat ) {
-	m_Pivot = mat;
-	m_PivotInverse = inverse( m_Pivot );
-}
+	glm::decompose( mat, transform.m_Scale, transform.m_Rotation, transform.m_Position, ununsed3, ununsed4 );
 
-const glm::vec3 CMeshTree::Node::GetPivotPoint( ) {
-	return vec3( GetPivotMatrix( ) * vec4( 0.f, 0.f, 0.f, 1.f ) );
-}
-
-const glm::mat4 CMeshTree::Node::GetPivotMatrix( ) {
-	return m_Pivot;
-}
-
-const glm::vec3 CMeshTree::Node::GetTransformedPivot( ) {
-	return glm::vec3( GetTransform( ) * glm::vec4( GetPivotPoint( ), 1.f ) );
-}
-
-const glm::mat4 CMeshTree::Node::GetTransform( ) {
-	glm::mat4 transform = m_BaseTransform * m_Pivot * m_Transform.getMatrix( ) *  m_PivotInverse;
-
-	if (m_Parent)
-		transform = m_Parent->GetTransform( ) * transform;
-
-	return transform;
+	SetTransform( transform );
 }

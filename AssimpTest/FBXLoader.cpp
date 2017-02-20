@@ -68,6 +68,10 @@ namespace {
 		return result;
 	}
 
+	quat convert( const aiQuaternion& value ) {
+		return quat( value.w, value.x, value.y, value.z );
+	}
+
 	mat4 convert( const aiMatrix4x4& mat ) {
 		mat4 result;
 
@@ -140,18 +144,42 @@ void FBXLoader::Load( const std::string file, CAnimation& animation ) {
 			std::string nodeName = GetNodeName( fbxChannel );
 			std::string dataName = GetNodeData( fbxChannel );
 
-			CAnimationChannel& chnl = animation.GetChannel( nodeName );
+			CAnimationChannel* chnl = animation.GetChannel( nodeName );
 
+			// ------ Specific animation types
 			if (dataName == "Translation") {
 				for (size_t p = 0; p < fbxChannel->mNumPositionKeys; p++) {
 					aiVector3D value = fbxChannel->mPositionKeys[p].mValue;
-					chnl.AddKey( { convert<vec3>( value ) } );
+					chnl->GetKey( p ).m_Position = convert<vec3>( value );
 				}
 			}
 			else if (dataName == "Rotation") {
+				for (size_t p = 0; p < fbxChannel->mNumRotationKeys; p++) {
+					aiQuaternion value = fbxChannel->mRotationKeys[p].mValue;
+					chnl->GetKey( p ).m_Rotation = convert( value );
+				}
+			}
+
+			else if (dataName == "Scaling") {
+				for (size_t p = 0; p < fbxChannel->mNumScalingKeys; p++) {
+					aiVector3D value = fbxChannel->mScalingKeys[p].mValue;
+					chnl->GetKey( p ).m_Scale = convert<vec3>( value );
+				}
+			}
+
+			// ------ General
+			else {
 				for (size_t p = 0; p < fbxChannel->mNumPositionKeys; p++) {
 					aiVector3D value = fbxChannel->mPositionKeys[p].mValue;
-					chnl.AddKey( { convert<vec3>( value ) } );
+					chnl->GetKey( p ).m_Position = convert<vec3>( value );
+				}
+				for (size_t p = 0; p < fbxChannel->mNumRotationKeys; p++) {
+					aiQuaternion value = fbxChannel->mRotationKeys[p].mValue;
+					chnl->GetKey( p ).m_Rotation = convert( value );
+				}
+				for (size_t p = 0; p < fbxChannel->mNumScalingKeys; p++) {
+					aiVector3D value = fbxChannel->mScalingKeys[p].mValue;
+					chnl->GetKey( p ).m_Scale = convert<vec3>( value );
 				}
 			}
 		}
@@ -206,14 +234,14 @@ void FBXLoader::ParseNode( const aiNode* node, CMeshTree::Node* targetNode ) {
 
 	// Loop through nodes to fetch all data in FBX parser
 	while (data != "") {
-		if (data == "RotationPivot")
-			targetNode->SetPivot( transpose( convert( node->mTransformation ) ) );
+		if (data == "Translation")
+			baseTransform = baseTransform * transpose( convert( node->mTransformation ) );
 
-		else if (data == "Translation")
+		if (data == "Rotation")
 			baseTransform = baseTransform * transpose( convert( node->mTransformation ) );
 
 		else if (data == "PreRotation")
-			targetNode->SetLocalAxes( transpose( convert( node->mTransformation ) ) );
+			targetNode->SetRotationAxes( transpose( convert( node->mTransformation ) ) );
 
 		node = node->mChildren[0];
 		data = GetNodeData( node );
@@ -225,9 +253,9 @@ void FBXLoader::ParseNode( const aiNode* node, CMeshTree::Node* targetNode ) {
 
 	// Base transform
 	if (!node->mTransformation.IsIdentity( ))
-		targetNode->SetBaseTransform( transpose( convert( node->mTransformation ) ) );
+		targetNode->SetTransform( transpose( convert( node->mTransformation ) ) );
 	else
-		targetNode->SetBaseTransform( baseTransform );
+		targetNode->SetTransform( baseTransform );
 
 	// We made it! To the actual node
 	for (size_t i = 0; i < node->mNumChildren; i++) {

@@ -20,10 +20,10 @@ void CProgram::Load( ) {
 			gridVerts.push_back( vec3( -gridSize, 0, x ) );
 			gridVerts.push_back( vec3( gridSize, 0, x ) );
 
-			normals.push_back( vec3( 1.f ) );
-			normals.push_back( vec3( 1.f ) );
-			normals.push_back( vec3( 1.f ) );
-			normals.push_back( vec3( 1.f ) );
+			normals.push_back( vec3( 0.2f ) );
+			normals.push_back( vec3( 0.2f ) );
+			normals.push_back( vec3( 0.2f ) );
+			normals.push_back( vec3( 0.2f ) );
 		}
 
 		m_Grid.m_DrawMode = GL_LINES;
@@ -47,14 +47,16 @@ void CProgram::Update( float delta ) {
 	static float rSpeed = 0.1f;
 	t += delta;
 
-	m_Camera.position = glm::vec3( sin( t * rSpeed ), 0.4f, cos( t * rSpeed ) ) * 6.f;
+	m_Camera.position = glm::vec3( sin( t * rSpeed ), 0.4f, cos( t * rSpeed ) ) * 3.f;
 	m_Camera.direction = -m_Camera.position;
 
 	m_Animator.Update( delta );
 
 	/*CMeshTree::Node* node = m_Nodes[0];
+	node->m_Transform.m_Rotation = angleAxis( t * 1.4f, vec3( 1.f, 0.f, 0.f ) );
+	node->m_Transform.m_Position = vec3( sin( t ) * 2.f, 0.f, 0.f );*/
 
-	while (node != NULL) {
+	/*while (node != NULL) {
 		node->m_Transform.rotation.y = t * 40.f;
 		node->m_Transform.rotation.z = t * 10.f;
 		node = node->GetChildCount( ) > 0 ? node->GetChild( 0 ) : NULL;
@@ -82,6 +84,8 @@ void CProgram::Render( float delta ) {
 	}
 
 	m_Shader.set( "u_model", mat4( 1.f ) );
+
+	glLineWidth( 1.f );
 	m_Grid.Draw( );
 	//m_Shader.set( "u_model", mat4( 1.f ) );
 	m_MeshTree.Draw( m_Shader );
@@ -130,7 +134,6 @@ void CProgram::CreateTempMeshTree( ) {
 		}
 
 		CMeshTree::Node* mNode = new CMeshTree::Node( "ALLAH" );
-		mNode->SetPivot( glm::vec3( 0.f, 0.f, float( i ) ) );
 
 		node->AddChild( mNode );
 		node = mNode;
